@@ -25,14 +25,17 @@ export default class SearchBar extends Component {
     onSubmit(event) {
         event.preventDefault();
 
-        console.log("Submit: " + this.state.term+" Note: "+ this.state.note+" catre "+this.state.category);
-        
-        // create a string for an HTTP body message
         const userID = encodeURIComponent(Auth.getUser());
         const note = encodeURIComponent(this.state.term);
 		const usernote = encodeURIComponent(this.state.note);
 		const category = encodeURIComponent(this.state.category);
         const noteData = `userID=${userID}&note=${note}&usernote=${usernote}&category=${category}`;
+		if(usernote=="undefined" || note=="undefined"){
+			console.log("inavild");
+			alert("Please add all field");
+			return;
+		}
+		
 
         // create an AJAX request
         const xhr = new XMLHttpRequest();
@@ -44,8 +47,6 @@ export default class SearchBar extends Component {
         if (xhr.status === 200) {
             localStorage.setItem('successMessage', xhr.response.message);
 		} else {
-            // failure
-
             const errors = xhr.response.errors ? xhr.response.errors : {};
             errors.summary = xhr.response.message;
         }
@@ -63,8 +64,9 @@ export default class SearchBar extends Component {
             <div>
                 <form onSubmit={this.onSubmit} className="input-group">
                     <TextField
-                        floatingLabelText="Title"
+                        floatingLabelText="Title *"
                         floatingLabelFixed={true}
+						required
                         className="search-bar form-control"
                         value={this.state.term}
                         onChange={event => this.onInputChange(event.target.value)}
@@ -75,8 +77,9 @@ export default class SearchBar extends Component {
 					</select>
 
 					<TextField
-                        floatingLabelText="Type Your Note"
+                        floatingLabelText="Type Your Note *"
                         floatingLabelFixed={true}
+						required
                         className="search-bar form-control"
                         value={this.state.note}
                         onChange={event => this.onInputChangeNote(event.target.value)}

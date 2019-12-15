@@ -21440,12 +21440,6 @@ var spinnerStyle = {
     }
 };
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name: name, calories: calories, fat: fat, carbs: carbs, protein: protein };
-}
-
-var rows = [createData('Frozen yoghurt', 159, 6.0, 24, 4.0), createData('Ice cream sandwich', 237, 9.0, 37, 4.3), createData('Eclair', 262, 16.0, 24, 6.0), createData('Cupcake', 305, 3.7, 67, 4.3), createData('Gingerbread', 356, 16.0, 49, 3.9)];
-
 var NoteList = function (_Component) {
     _inherits(NoteList, _Component);
 
@@ -21455,7 +21449,6 @@ var NoteList = function (_Component) {
         var _this = _possibleConstructorReturn(this, (NoteList.__proto__ || Object.getPrototypeOf(NoteList)).call(this, props));
 
         _this.state = { notes: '' };
-
         _this.renderNotes = _this.renderNotes.bind(_this);
         return _this;
     }
@@ -21615,14 +21608,16 @@ var SearchBar = function (_Component) {
         value: function onSubmit(event) {
             event.preventDefault();
 
-            console.log("Submit: " + this.state.term + " Note: " + this.state.note + " catre " + this.state.category);
-
-            // create a string for an HTTP body message
             var userID = encodeURIComponent(_Auth2.default.getUser());
             var note = encodeURIComponent(this.state.term);
             var usernote = encodeURIComponent(this.state.note);
             var category = encodeURIComponent(this.state.category);
             var noteData = 'userID=' + userID + '&note=' + note + '&usernote=' + usernote + '&category=' + category;
+            if (usernote == "undefined" || note == "undefined") {
+                console.log("inavild");
+                alert("Please add all field");
+                return;
+            }
 
             // create an AJAX request
             var xhr = new XMLHttpRequest();
@@ -21634,8 +21629,6 @@ var SearchBar = function (_Component) {
                 if (xhr.status === 200) {
                     localStorage.setItem('successMessage', xhr.response.message);
                 } else {
-                    // failure
-
                     var errors = xhr.response.errors ? xhr.response.errors : {};
                     errors.summary = xhr.response.message;
                 }
@@ -21659,8 +21652,9 @@ var SearchBar = function (_Component) {
                     'form',
                     { onSubmit: this.onSubmit, className: 'input-group' },
                     _react2.default.createElement(_TextField2.default, {
-                        floatingLabelText: 'Title',
+                        floatingLabelText: 'Title *',
                         floatingLabelFixed: true,
+                        required: true,
                         className: 'search-bar form-control',
                         value: this.state.term,
                         onChange: function onChange(event) {
@@ -21684,8 +21678,9 @@ var SearchBar = function (_Component) {
                         )
                     ),
                     _react2.default.createElement(_TextField2.default, {
-                        floatingLabelText: 'Type Your Note',
+                        floatingLabelText: 'Type Your Note *',
                         floatingLabelFixed: true,
+                        required: true,
                         className: 'search-bar form-control',
                         value: this.state.note,
                         onChange: function onChange(event) {
