@@ -1,0 +1,6 @@
+{
+    "dbUri": "mongodb://localhost/mern-crud",
+    "jwtSecret": "JWTSECRET",
+    "FB_ID": "FACEBOOKID",
+    "FB_Secret": "FACEBOOKSECRET"
+}
